@@ -12,6 +12,7 @@ pipeline {
         stage('Validate Connection') {
             steps {
                 sh "echo HOSTNAME"
+                sh "whoami"
             }
         }
 
