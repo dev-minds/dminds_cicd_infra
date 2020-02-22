@@ -38,10 +38,10 @@ pipeline {
                     passwordVariable: 'AWS_ACCESS_KEY_ID', 
                     usernameVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
-                //   wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                //       sh "echo 'variables here'"
-                //   } 
-                    sh "echo Variables"                                     
+                  wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                      sh "echo 'variables here'"
+                  } 
+                    // sh "echo Variables"                                     
                 }
             }
         }
