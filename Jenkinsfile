@@ -9,10 +9,18 @@ pipeline {
     // 
     
     stages {
-        stage('Validate Connection') {
-            steps {
-                sh "echo HOSTNAME"
-                sh "whoami"
+        stage('Validate Scripts') {
+            parallel{
+                stage('Validate Packer') {
+                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' } alwaysPull true}
+                    steps {
+                        checkout scm 
+                        wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                            sh "packker validate ./base/base.json"
+                            // sh "AMI_BASE="
+                        }
+                    }
+                }
             }
         }
 
