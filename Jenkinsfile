@@ -29,5 +29,20 @@ pipeline {
             }
         }
 
+        stage("AWS ACCT ACCESS") {
+            agent {docker {image 'simonmcc/hashicorp-pipeline:latest'}}
+            steps {
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentials: '',
+                                  accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                                  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                  wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                      sh "echo 'variables here'"
+                  }                                      
+                }
+            }
+        }
+
     }
 }
