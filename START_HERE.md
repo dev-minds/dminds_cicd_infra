@@ -14,7 +14,7 @@
 # FLOW: From a jenkinsfile point of view, below is the flow 
     - Setup Jenkins environment 
     - Test a simple jenkinsfile to connect with your repo 
-    - Setup a repo to hold your code 
+    - Setup a repo to hold your code (CURRENTLY REPO IS PRIVATE: WILL ALWAYS REQUIRE SOME AUTHE.)
     - Have docker engine configured on your jenkins env
     - Packer build 
     - Terraform 
