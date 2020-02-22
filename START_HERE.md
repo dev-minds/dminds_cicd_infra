@@ -1,5 +1,10 @@
 # Infrastructure cicd pipeline, inspired by https://github.com/jenkins201/packer-terraform-cicd-aws/blob/master/Jenkinsfile
 
+# Reference Repos 
+https://github.com/phelun/packer-terraform-cicd-aws/blob/master/Jenkinsfile
+https://github.com/awslabs/ami-builder-packer
+
+
 # Futuring Technologies 
     - Packer 
     - Terraform 
