@@ -12,7 +12,7 @@ pipeline {
         stage('Validate Connection') {
             steps {
                 checkout scm 
-                sh "echo $HOSTNAME"
+                sh "echo HOSTNAME"
             }
         }
     }
