@@ -16,7 +16,7 @@ pipeline {
                     steps {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                            sh "packker validate ./base/base.json"
+                            sh "packer validate ./base/ami-builder-packer.json"
                             // sh "AMI_BASE="
                         }
                     }
