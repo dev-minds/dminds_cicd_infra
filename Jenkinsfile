@@ -33,10 +33,11 @@ pipeline {
             agent {docker {image 'simonmcc/hashicorp-pipeline:latest'}}
             steps {
                 checkout scm
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentials: '',
-                                  accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                                  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                withCredentials([
+                    usernamePassword(credentialsId: 'dminds_aws_keys'
+                    passwordVariable: 'AWS_ACCESS_KEY_ID', 
+                    usernameVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
                   wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                       sh "echo 'variables here'"
                   }                                      

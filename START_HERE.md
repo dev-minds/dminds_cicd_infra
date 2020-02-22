@@ -24,6 +24,7 @@
     - Chef Inspec 
     - Bash build
     - AWS target env 
+      - Install clodbees aws creds plugin 
     - See how you can do git squash here 
 
 1. Setup Jenkins environment 
