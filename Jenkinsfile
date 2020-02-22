@@ -34,7 +34,7 @@ pipeline {
             steps {
                 checkout scm
                 withCredentials([
-                    usernamePassword(credentialsId: 'dminds_aws_keys'
+                    usernamePassword(credentialsId: 'dminds_aws_keys',
                     passwordVariable: 'AWS_ACCESS_KEY_ID', 
                     usernameVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
