@@ -20,7 +20,7 @@ pipeline {
             agent {
                 docker {
                     image 'simonmcc/hashicorp-pipeline:latest'
-                    alwaysPull true 
+                    alwaysPull false 
                 }
             }
             steps {

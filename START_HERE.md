@@ -16,6 +16,9 @@
     - Test a simple jenkinsfile to connect with your repo 
     - Setup a repo to hold your code (CURRENTLY REPO IS PRIVATE: WILL ALWAYS REQUIRE SOME AUTHE.)
     - Have docker engine configured on your jenkins env
+      - Add Jenkins user to docker group
+      - Restart both docker and jenkins services
+      - We are using this image simonmcc/hashicorp-pipeline:latest
     - Packer build 
     - Terraform 
     - Chef Inspec 
