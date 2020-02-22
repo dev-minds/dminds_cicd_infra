@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('Validate Connection') {
             steps {
-                checkout scm 
                 sh "echo HOSTNAME"
             }
         }

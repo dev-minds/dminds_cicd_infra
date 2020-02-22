@@ -21,5 +21,6 @@
     - Chef Inspec 
     - Bash build
     - AWS target env 
+    - See how you can do git squash here 
 
 1. Setup Jenkins environment 
