@@ -6,5 +6,5 @@
       "base_ami should be latest Ubuntu AMI",
       "curl -sSL 'https://cloud-images.ubuntu.com/query/xenial/server/released.current.txt' | grep us-east-1 | grep hvm | grep -e 'ebs' | awk '{print $8;}'",
       ""
-    ],
+    ]
 }
