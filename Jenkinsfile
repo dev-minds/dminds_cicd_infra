@@ -12,7 +12,7 @@ pipeline {
         stage('Validate Scripts') {
             parallel{
                 stage('Validate Packer') {
-                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' } alwaysPull true}
+                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' } }
                     steps {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
