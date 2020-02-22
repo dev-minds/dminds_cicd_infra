@@ -1,8 +1,10 @@
-[
-    {
-        "Source": "com.ami.builder",
-        "DetailType": "AmiBuilder",
-        "Detail": "{ \"AmiStatus\": \"Created\"}",
-        "Resources": [ "<<AMI-ID>>" ]
-    }
-]
+{
+    "_readme": [
+      "Ubuntu 16.04 (xenial) LTS",
+      "AMI: amd64 hvm:ebs-ssd",
+      "     see the *_ami variables below for specific names",
+      "base_ami should be latest Ubuntu AMI",
+      "curl -sSL 'https://cloud-images.ubuntu.com/query/xenial/server/released.current.txt' | grep us-east-1 | grep hvm | grep -e 'ebs' | awk '{print $8;}'",
+      ""
+    ],
+}
