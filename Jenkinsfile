@@ -14,5 +14,19 @@ pipeline {
                 sh "echo HOSTNAME"
             }
         }
+
+        stage('Docker executor') {
+            agent {
+                docker {
+                    image 'simonmcc/hashicorp-pipeline:latest'
+                    alwaysPull true 
+                }
+            }
+            steps {
+                checkout scm 
+                sh "cat START_HERE.md"
+            }
+        }
+
     }
 }
