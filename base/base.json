@@ -63,7 +63,7 @@
           "role_paths": [
             "./base/ansible/roles/common"
           ],
-          "playbook_dir": "ansible",
+          "playbook_dir": "./base/ansible",
           "galaxy_file": "./base/ansible/requirements.yaml"
         },
         {
