@@ -1,0 +1,24 @@
+---
+- hosts: localhost 
+  connection: local 
+  gather_facts: true 
+  become: yes 
+
+  vars: 
+    cis_level_1_exclusions: 
+      - 3.4.2
+      - 3.4.3
+      - 3.6.2 
+      - 4.2.1.4
+      - 4.2.2.4
+      - 4.2.2.5
+      - 1.1.19
+      - 5.3.3
+    logs: 
+      - file: /var/log/messages 
+        group_name: "system_logs"
+  
+  roles: 
+    - common 
+    # - anthcourtney.cis-amazon-linux 
+    # - dharrisio.aws-cloudwatch-logs-agent 

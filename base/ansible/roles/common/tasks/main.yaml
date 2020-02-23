@@ -1,0 +1,7 @@
+--- 
+
+# System securoty patch 
+- name: SYSTEM UPDATE | yum update 
+  yum: 
+    name: "*"
+    state: latest 

@@ -6,18 +6,19 @@
 
 pipeline { 
     agent any
-    // 
-    
+    environment {
+        AWS_REGION = 'eu-west-1'
+    }
     stages {
-        stage('Validate Scripts') {
+        stage('Validate AMI Build') {
             parallel{
                 stage('Validate Packer') {
-                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' } }
+                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
                     steps {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                            sh "packer validate ./base/ami-builder-packer.json"
-                            // sh "AMI_BASE="
+                            sh "packer validate -var-file=vars.json base.json"
+                            
                         }
                     }
                 }
