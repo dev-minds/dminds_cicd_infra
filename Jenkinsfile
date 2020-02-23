@@ -10,19 +10,30 @@ pipeline {
         AWS_REGION = 'eu-west-1'
     }
     stages {
-        stage('Validate AMI Build') {
+        stage('Validate Configs') {
             parallel{
                 stage('Validate Packer') {
-                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
+                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                            sh "ls -al"
                             sh "packer validate -var-file=./base/vars.json ./base/base.json"
-                            
                         }
                     }
                 }
+                stage('Validate TF'){
+                    agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
+                    steps{
+                        checkout scm 
+                        sh "terraform --version"
+                    }
+                }
+            }
+        }
+
+        stage ('Proceed AMI Build') {
+            steps{
+                 input 'Build AMI?'
             }
         }
 
