@@ -17,7 +17,7 @@ pipeline {
                     steps {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                            sh "packer validate -var-file=vars.json base.json"
+                            sh "packer validate -var-file=base/vars.json base/base.json"
                             
                         }
                     }
