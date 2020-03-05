@@ -33,9 +33,17 @@ pipeline {
                 }
                 stage('Validate TF'){
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
-                    steps{
-                        checkout scm 
-                        sh "terraform fmt -check=true"
+                    steps {
+                        checkout scm
+                        withCredentials([
+                            usernamePassword(credentialsId: 'dminds_aws_keys',
+                            passwordVariable: 'AWS_ACCESS_KEY_ID', 
+                            usernameVariable: 'AWS_SECRET_ACCESS_KEY'
+                        )]) {
+                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                                sh "terraform fmt -check=true"
+                            } 
+                        }
                     }
                 }
             }
