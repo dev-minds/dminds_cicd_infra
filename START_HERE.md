@@ -25,7 +25,7 @@ https://github.com/awslabs/ami-builder-packer
       - Restart both docker and jenkins services
       - We are using this image simonmcc/hashicorp-pipeline:latest
     - PACKER BUILDs(IMMUTABLE INFRA)
-      - VPC ide: vpc-a6bda2ce
+      - VPC id: vpc-a6bda2ce
       - SubnetPub: subnet-c97205af -- eu-west-1   
       - Building a secure AWS environment has many layers - 
         - the AWS account access and resource privileges, 
