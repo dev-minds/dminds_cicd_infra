@@ -41,7 +41,9 @@ pipeline {
                             usernameVariable: 'AWS_SECRET_ACCESS_KEY'
                         )]) {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                                sh "terraform fmt -check=true"
+                                sh "terraform init"
+                                sh "terraform validate"
+                                // sh "terraform fmt -check=true"
                             } 
                         }
                     }
