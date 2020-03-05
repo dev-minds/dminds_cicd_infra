@@ -35,7 +35,7 @@ pipeline {
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps{
                         checkout scm 
-                        sh "terraform fmt -check=true -diff=true"
+                        sh "terraform fmt -check=true"
                     }
                 }
             }
