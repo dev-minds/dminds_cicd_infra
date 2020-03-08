@@ -35,11 +35,11 @@ pipeline {
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps {
                         checkout scm
-                        withCredentials([
-                            usernamePassword(credentialsId: 'dminds_aws_keys',
-                            passwordVariable: 'AWS_ACCESS_KEY_ID', 
-                            usernameVariable: 'AWS_SECRET_ACCESS_KEY'
-                        )]) {
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws_keys',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                                 sh "terraform init"
                                 sh "terraform validate"
@@ -66,11 +66,10 @@ pipeline {
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    // wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                        sh "aws ec2 describe-instances --region eu-west-1"
-                        sh "./scripts/build.sh base base"
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        // sh "./scripts/build.sh base base"
                         sh "./scripts/build.sh app app"
-                    // }
+                    }
 
                 }
             }
