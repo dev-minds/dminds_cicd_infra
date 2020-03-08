@@ -28,6 +28,7 @@ pipeline {
                         checkout scm 
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                             sh "packer validate -var-file=./base/vars.json ./base/base.json"
+                            sh "terraform version"
                         }
                     }
                 }
