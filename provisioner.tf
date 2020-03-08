@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 terraform {
-  required_version = ">= 0.12.12"
+  required_version = ">= 0.12.0"
 
   backend "s3" {
     bucket  = "dm-vpc-states"
