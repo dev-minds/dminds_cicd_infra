@@ -67,7 +67,7 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                        // sh "./scripts/build.sh base base"
+                        sh "./scripts/build.sh base base"
                         sh "./scripts/build.sh app app"
                     }
 
