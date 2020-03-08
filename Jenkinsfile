@@ -67,7 +67,7 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     // wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                        sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws ec2 describe-instances --region eu-west-1"
+                        sh "aws ec2 describe-instances --region eu-west-1"
                         sh "./scripts/build.sh base base"
                         sh "./scripts/build.sh app app"
                     // }
@@ -76,30 +76,30 @@ pipeline {
             }
         }
 
-        stage('Docker executor') {
-            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
-            steps {
-                checkout scm 
-                sh "cat START_HERE.md"
-            }
-        }
+        // stage('Docker executor') {
+        //     agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
+        //     steps {
+        //         checkout scm 
+        //         sh "cat START_HERE.md"
+        //     }
+        // }
 
-        stage("AWS ACCT ACCESS") {
-            agent {docker {image 'simonmcc/hashicorp-pipeline:latest'}}
-            steps {
-                checkout scm
-                withCredentials([
-                    usernamePassword(credentialsId: 'dminds_aws_keys',
-                    passwordVariable: 'AWS_ACCESS_KEY_ID', 
-                    usernameVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
-                  wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                      sh "echo 'variables here'"
-                  } 
-                    // sh "echo Variables"                                     
-                }
-            }
-        }
+        // stage("AWS ACCT ACCESS") {
+        //     agent {docker {image 'simonmcc/hashicorp-pipeline:latest'}}
+        //     steps {
+        //         checkout scm
+        //         withCredentials([
+        //             usernamePassword(credentialsId: 'dminds_aws_keys',
+        //             passwordVariable: 'AWS_ACCESS_KEY_ID', 
+        //             usernameVariable: 'AWS_SECRET_ACCESS_KEY'
+        //         )]) {
+        //           wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+        //               sh "echo 'variables here'"
+        //           } 
+        //             // sh "echo Variables"                                     
+        //         }
+        //     }
+        // }
 
     }
 }
