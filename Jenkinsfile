@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Validate & Lint') {
             parallel{
-                stage('vacker validate') {
+                stage('packer validate') {
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps {
                         checkout scm 
@@ -31,7 +31,7 @@ pipeline {
                         }
                     }
                 }
-                stage('Validate TF'){
+                stage('terraform validate'){
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps {
                         checkout scm
@@ -67,7 +67,7 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-                        sh "./scripts/build.sh base base"
+                        // sh "./scripts/build.sh base base"
                         sh "./scripts/build.sh app app"
                     }
 
