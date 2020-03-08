@@ -2,7 +2,6 @@
     "variables": {
         "vpc": "",
         "subnet": "",
-        "aws_region": "",
         "ami_name": "BASE-MNGMT-AMI-BUILD_{{isotime \"02-Jan-06 03_04_05\"}}"
     },
 
