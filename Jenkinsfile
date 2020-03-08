@@ -62,7 +62,7 @@ pipeline {
             steps {
                 checkout scm 
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'dminds_aws_keys',
+                    credentialsId: 'aws_keys',
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
