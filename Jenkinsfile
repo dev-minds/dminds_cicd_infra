@@ -61,11 +61,11 @@ pipeline {
             agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
             steps {
                 checkout scm 
-                withCredentials([
-                    usernamePassword(credentialsId: 'dminds_aws_keys',
-                    passwordVariable: 'AWS_ACCESS_KEY_ID', 
-                    usernameVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'dminds_aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                     // wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                         sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws ec2 describe-instances --region eu-west-1"
                         sh "./scripts/build.sh base base"
