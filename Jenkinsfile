@@ -43,7 +43,7 @@ pipeline {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                                 sh "terraform init"
                                 sh "terraform validate"
-                                sh "terraform fmt -check=true"
+                                sh "terraform fmt"
                             } 
                         }
                     }
