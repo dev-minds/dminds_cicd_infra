@@ -1,4 +1,3 @@
-provider "aws" {}
 
 variable "vpc_main_cidr" {
   type = "string"
