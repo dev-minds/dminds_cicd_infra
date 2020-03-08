@@ -10,10 +10,8 @@ pipeline {
         AWS_REGION = 'eu-west-1'
     }
 
-    ansiColor('xterm') {
-        echo 'something that outputs ansi colored stuff'
-    }
-    
+
+
     options {
 		buildDiscarder(logRotator(numToKeepStr: '50', artifactNumToKeepStr: '50'))
 		disableConcurrentBuilds()
