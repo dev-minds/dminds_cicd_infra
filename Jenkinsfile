@@ -58,7 +58,7 @@ pipeline {
         }
 
         stage('Bake AMI') {
-            agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
+            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
             steps {
                 checkout scm 
                 withCredentials([
@@ -76,7 +76,7 @@ pipeline {
         }
 
         stage('Docker executor') {
-            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' alwaysPull false }}
+            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
             steps {
                 checkout scm 
                 sh "cat START_HERE.md"
