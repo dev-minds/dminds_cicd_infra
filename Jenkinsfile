@@ -10,8 +10,6 @@ pipeline {
         AWS_REGION = 'eu-west-1'
     }
 
-
-
     options {
 		buildDiscarder(logRotator(numToKeepStr: '50', artifactNumToKeepStr: '50'))
 		disableConcurrentBuilds()
@@ -22,9 +20,9 @@ pipeline {
     }
 
     stages {
-        stage('Validate Configs') {
+        stage('Validate & Lint') {
             parallel{
-                stage('Validate Packer') {
+                stage('vacker validate') {
                     agent { docker { image 'simonmcc/hashicorp-pipeline:latest'}}
                     steps {
                         checkout scm 
@@ -45,7 +43,7 @@ pipeline {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                                 sh "terraform init"
                                 sh "terraform validate"
-                                // sh "terraform fmt -check=true"
+                                sh "terraform fmt -check=true"
                             } 
                         }
                     }
@@ -59,13 +57,26 @@ pipeline {
             }
         }
 
-        stage('Docker executor') {
-            agent {
-                docker {
-                    image 'simonmcc/hashicorp-pipeline:latest'
-                    alwaysPull false 
+        stage('Bake AMI') {
+            agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
+            steps {
+                checkout scm 
+                withCredentials([
+                    usernamePassword(credentialsId: 'dminds_aws_keys',
+                    passwordVariable: 'AWS_ACCESS_KEY_ID', 
+                    usernameVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        sh "./scripts/build.sh base base"
+                        sh "./scripts/build.sh app app"
+                    }
+
                 }
             }
+        }
+
+        stage('Docker executor') {
+            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' alwaysPull false }}
             steps {
                 checkout scm 
                 sh "cat START_HERE.md"
