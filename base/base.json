@@ -9,6 +9,10 @@
         "name": "AWS-MGNT-GENERIC-BUILD - DMINDS",
         "type": "amazon-ebs",
         "region": "{{user `aws_region`}}",
+        "ami_description": "Amazon Linux CIS with Cloudwatch Logs agent",
+        "associate_public_ip_address": "true",
+        "vpc_id": "{{user `vpc`}}",
+        "subnet_id": "{{user `subnet`}}",
 
         "source_ami_filter": {
           "filters": {
@@ -16,8 +20,7 @@
             "name": "management-box-ami-v0.7",
             "root-device-type": "ebs"
           },
-          "owners": ["023451010066"
-          ],
+          "owners": ["023451010066"],
           "most_recent": true
         },
 
@@ -42,12 +45,7 @@
         },
         "snapshot_tags": {
           "Name": "{{user `ami_name`}}"
-        },
-    
-        "ami_description": "Amazon Linux CIS with Cloudwatch Logs agent",
-        "associate_public_ip_address": "true",
-        "vpc_id": "{{user `vpc`}}",
-        "subnet_id": "{{user `subnet`}}"
+        }
       }],
 
       "provisioners": [{

@@ -68,13 +68,47 @@ pipeline {
                 ]]) {
                     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                         // sh "./scripts/build.sh base base"
-                        sh "./scripts/build.sh app app"
+                        // sh "./scripts/build.sh app app"
                     }
-
                 }
             }
         }
 
+        stage('test stack'){
+            agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
+            when {
+                expression { env.BRANCH_NAME = 'master' }
+            }
+            steps{
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        sh "./scripts/tf-wrapper.sh -a plan"
+                        sh "./scripts/tf-wrapper.sh -a apply"
+                        sh "cat output.json"
+                        stash name: 'terraform_output', includes: '**/output.json'
+                    }
+                }
+            }
+            post {
+              failure {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+                         sh "./scripts/tf-wrapper.sh -a destroy"
+                    }
+                }
+              }
+            }
+        }
         // stage('Docker executor') {
         //     agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
         //     steps {
