@@ -19,7 +19,7 @@
         "source_ami_filter": {
           "filters": {
             "virtualization-type": "hvm",
-            "name": "management-box-ami-v0.7",
+            "name": "ami-0ff760d16d9497662",
             "root-device-type": "ebs"
           },
           "owners": ["023451010066"],
