@@ -78,7 +78,7 @@ pipeline {
         stage('test stack'){
             agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
             when {
-                expression { env.BRANCH_NAME = 'master' }
+                expression { env.BRANCH_NAME != 'master' }
             }
             steps{
                 checkout scm
