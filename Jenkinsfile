@@ -7,8 +7,8 @@
 pipeline { 
     agent any
     environment {
-        AWS_DEFAULT_REGION = 'us-east-1'
-        
+        AWS_DEFAULT_REGION = 'eu-west-1'
+
     }
 
     options {
