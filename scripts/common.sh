@@ -2,6 +2,10 @@
 #
 # Wrapping a few CLI command in bash always seems like a good idea at the start.
 # It's not. Don't do it. Use python to wrap & possible call API's directly.
+
+#############################################
+# FUNCTION: 
+#############################################
 tag_exists () {
     local SHA=$1
     if [[ -z "$SHA" ]]; then
@@ -22,6 +26,9 @@ tag_exists () {
     fi
 }
 
+#############################################
+# FUNCTION: 
+#############################################
 get_git_branch () {
 # output the current branch, handling detached HEAD as found in Jenkins
 # https://stackoverflow.com/questions/6059336/how-to-find-the-current-git-branch-in-detached-head-state
@@ -36,6 +43,10 @@ get_git_branch () {
     fi
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 base_rebuilt () {
     local NAME=$1
     if [[ -e "manifest-$NAME.json" ]] && [[ -s "manifest-$NAME.json" ]]; then
@@ -45,12 +56,19 @@ base_rebuilt () {
     fi
 }
 
+#############################################
+# FUNCTION: 
+#############################################
 extract_artifact_id () {
     local NAME="$1"
     local AMI="$(cat manifest-$NAME.json | jq '.builds[0].artifact_id' | perl -n -e'/us-east-1:(ami-[a-z0-9]+)/ && print $1')"
     echo "${AMI}"
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 get_base_ami () {
     local BASE_BUILT=$1
     local DIR=$2
@@ -65,6 +83,10 @@ get_base_ami () {
     fi
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 package_check () {
     command -v aws > /dev/null || (echo "aws cli must be installed" && exit 1)
     command -v packer > /dev/null || (echo "packer must be installed" && exit 1)
@@ -74,6 +96,10 @@ package_check () {
     command -v perl > /dev/null || (echo "perl must be installed" && exit 1)
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 check_terraform_version() {
   # TODO: extract from requirements.txt or something?
   TERRAFORM_REQUIRED_VERSION="v0.11.7"
@@ -87,6 +113,10 @@ check_terraform_version() {
   fi
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 check_aws_credentials () {
     [[ -z "${AWS_DEFAULT_REGION}" ]] && (echo "AWS_DEFAULT_REGION must be set" && exit 1)
     [[ -z "${AWS_ACCESS_KEY_ID}" ]] && (echo "AWS_ACCESS_KEY_ID must be set" && exit 1)
@@ -94,6 +124,10 @@ check_aws_credentials () {
     [[ 1 ]]
 }
 
+
+#############################################
+# FUNCTION: Generate tf backend on the fly 
+#############################################
 generate_terraform_backend() {
     # inspired by https://github.com/hashicorp/terraform/issues/12877#issuecomment-311649591
     local PROJECT_NAME
@@ -117,13 +151,14 @@ generate_terraform_backend() {
 	      LOCATION_CONSTRAINT='--create-bucket-configuration LocationConstraint="${AWS_DEFAULT_REGION}"'
     fi
 
+    # CREATE S3 BUCKET ON THE FLY IF BUCKET (SHOULD NOT BE EXISTING) 
     BUCKET_NAME="terraform-tfstate-${ACCOUNT_ID}"
     BUCKET_EXISTS=$(aws s3api list-buckets | jq ".Buckets[] | select(.Name == \"${BUCKET_NAME}\")")
     if [[ -z "${BUCKET_EXISTS}" ]]; then
         echo "Creating Terraform State S3 Bucket ${BUCKET_NAME} in ${AWS_DEFAULT_REGION}"
         aws s3api create-bucket \
             --region "${AWS_DEFAULT_REGION}" \
-            ${LOCATION_CONSTRAINT} \
+            --create-bucket-configuration LocationConstraint=eu-west-1 \
             --bucket "${BUCKET_NAME}"
     fi
 
@@ -139,8 +174,6 @@ generate_terraform_backend() {
             --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
         aws dynamodb wait table-exists --table-name terraform_locks
     fi
-
-
     # NB - the pattern of managing the S3 bucket & DynamoDB table in Terraform
     # makes it impossible to cleanly destroy the terraform stack, so we don't do that
     cat <<EOF > ./backend_config.tf
@@ -155,6 +188,10 @@ terraform {
 EOF
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 map_branch_to_workspace() {
   # TODO input & output sanity checking..
   if [[ $1 = 'master' ]]; then
@@ -164,6 +201,10 @@ map_branch_to_workspace() {
   fi
 }
 
+
+#############################################
+# FUNCTION: 
+#############################################
 map_branch_to_tfvars() {
 		# map the branch to a tfvars file, with some sensible defaults
 		local TF_VARS_FILE

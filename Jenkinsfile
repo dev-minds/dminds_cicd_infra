@@ -8,6 +8,7 @@ pipeline {
     agent any
     environment {
         AWS_DEFAULT_REGION = 'eu-west-1'
+
     }
 
     options {
@@ -42,6 +43,7 @@ pipeline {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                                sh "export TF_LOG=DEBUG"
                                 sh "terraform init"
                                 sh "terraform validate"
                                 sh "terraform fmt"
@@ -78,7 +80,7 @@ pipeline {
         stage('test stack'){
             agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
             when {
-                expression { env.BRANCH_NAME = 'master' }
+                expression { env.BRANCH_NAME != 'master' }
             }
             steps{
                 checkout scm
