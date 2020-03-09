@@ -42,6 +42,7 @@ pipeline {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
                             wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                                sh "export TF_LOG=DEBUG"
                                 sh "terraform init"
                                 sh "terraform validate"
                                 sh "terraform fmt"
