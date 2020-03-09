@@ -157,8 +157,8 @@ generate_terraform_backend() {
     if [[ -z "${BUCKET_EXISTS}" ]]; then
         echo "Creating Terraform State S3 Bucket ${BUCKET_NAME} in ${AWS_DEFAULT_REGION}"
         aws s3api create-bucket \
-            --region "eu-west-1" \
-            ${LOCATION_CONSTRAINT} \
+            --region "${AWS_DEFAULT_REGION}" \
+            --create-bucket-configuration LocationConstraint=eu-west-1 \
             --bucket "${BUCKET_NAME}"
     fi
 
