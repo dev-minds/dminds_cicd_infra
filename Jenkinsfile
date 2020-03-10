@@ -77,7 +77,7 @@ pipeline {
             }
         }
 
-        stage('test stack'){
+        stage('build sandbox stack'){
             agent { docker {image 'simonmcc/hashicorp-pipeline:latest' }}
             when {
                 expression { env.BRANCH_NAME != 'master' }
