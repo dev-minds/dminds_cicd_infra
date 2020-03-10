@@ -6,10 +6,10 @@ resource "aws_vpc" "dmz" {
   cidr_block = "10.29.0.0/16"
 }
 
-// output "main_vpc_id" {
-//   value = "${aws_vpc.main.id}"
-// }
+output "main_vpc_id" {
+  value = "${aws_vpc.main.id}"
+}
 
-// output "dmz_vpc_id" {
-//   value = "${aws_vpc.dmz.id}"
-// }
+output "dmz_vpc_id" {
+  value = "${aws_vpc.dmz.id}"
+}
