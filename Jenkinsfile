@@ -112,30 +112,58 @@ pipeline {
               }
             }
         }
-        // stage('Docker executor') {
-        //     agent { docker { image 'simonmcc/hashicorp-pipeline:latest' }}
-        //     steps {
-        //         checkout scm 
-        //         sh "cat START_HERE.md"
-        //     }
-        // }
 
-        // stage("AWS ACCT ACCESS") {
-        //     agent {docker {image 'simonmcc/hashicorp-pipeline:latest'}}
-        //     steps {
-        //         checkout scm
-        //         withCredentials([
-        //             usernamePassword(credentialsId: 'dminds_aws_keys',
-        //             passwordVariable: 'AWS_ACCESS_KEY_ID', 
-        //             usernameVariable: 'AWS_SECRET_ACCESS_KEY'
-        //         )]) {
-        //           wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
-        //               sh "echo 'variables here'"
-        //           } 
-        //             // sh "echo Variables"                                     
-        //         }
-        //     }
-        // }
+        stage('test sandbox stack'){
+            agent { 
+              docker {
+                image 'chef/inspec:latest'
+                  args "--entrypoint=''"
+              }
+            }
+            when {
+                expression {env.BRANCH_NAME != 'master' }
+            }
+            steps{
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
 
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        unstash 'terraform_output'
+                        sh "cat output.json"
+                        sh "mkdir aws-security/files || true"
+                        sh "mkdir test-results || true"
+                        sh "cp output.json aws-security/files/output.json"
+                        sh "inspec exec aws-security --reporter=cli junit:test-results/inspec-junit.xml -t aws://eu-west-1"
+                        sh "touch test-results/inspec-junit.xml"
+                        junit 'test-results/*.xml'
+                    }
+                }
+            }
+
+        }
+        stage('destroy sandbo stack'){
+            agent { docker {image 'simonmcc/hashicorp-pipeline:latest'} }
+            when {
+                expression { env.BRANCH_NAME != 'master' }
+            }
+            steps{
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        sh "./scripts/tf-wrapper.sh -a destroy"
+                    }
+                }
+            }            
+
+        }
     }
 }
