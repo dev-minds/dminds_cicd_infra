@@ -137,7 +137,7 @@ pipeline {
                         sh "mkdir -p aws-security/files || true"
                         sh "mkdir test-results || true"
                         sh "cp -rf ./output.json aws-security/files/"
-                        sh "inspec exec aws-security --reporter=cli junit:test-results/inspec-junit.xml -t aws://eu-west-1"
+                        sh "inspec exec aws-security --reporter=cli junit:test-results/inspec-junit.xml -t aws://eu-west-1 --chef-license accept-silent"
                         sh "touch test-results/inspec-junit.xml"
                         junit 'test-results/*.xml'
                     }
