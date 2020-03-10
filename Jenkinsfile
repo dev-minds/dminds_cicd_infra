@@ -2,7 +2,7 @@
 // Any complex logic should go to functions in a scripted groovy script 
 // Help Points for declaratives 
 //      - http://jenkins.dev-minds.com/view/Infrastructure_cicd/job/dminds_infra_wip/pipeline-syntax/
-//      - 
+//      - https://github.com/dev-minds/devops-infra-demo
 
 pipeline { 
     agent any
@@ -164,6 +164,54 @@ pipeline {
                 }
             }            
 
+        }
+        stage('PROD: Plan Master'){
+            agent {docker {image 'simonmcc/hashicorp-pipeline:latest' }}
+            when {
+                expression { env.BRANCH_NAME = 'master' }
+            }
+            steps {
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        sh "./scripts/tf-wrapper.sh -a plan"
+                        stash name: 'terraform_plan', includes: 'plan/plan.out,.terraform/**'
+                    }
+                }                
+            }
+        }
+        stage('Manual Approval') {
+            when {
+                expression { env.BRANCH_NAME == 'master' }
+            }
+            steps {
+                input 'Do you approve the apply?'
+            }
+        }
+        stage('PROD: Apply Master'){
+            agent { docker { image 'simonmcc/hashicorp-pipeline:latest' } }
+            when {
+                expression { env.BRANCH_NAME == 'master' }
+            } 
+            steps {
+                checkout scm
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_keys',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+
+                ]]) {
+                    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
+                        unstash 'terraform_plan'
+                        sh "./scripts/tf-wrapper.sh -a apply"
+                    }
+                }                
+            }           
         }
     }
 }
