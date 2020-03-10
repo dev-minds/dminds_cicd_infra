@@ -219,7 +219,7 @@ map_branch_to_tfvars() {
 						if [[ -f "$1".tfvars ]]; then
 								TF_VARS_FILE="$1".tfvars
 						else
-								TF_VARS_FILE="testing-defaults.tfvars"
+								TF_VARS_FILE="develop.tfvars"
 						fi
 						;;
 		esac
