@@ -134,9 +134,9 @@ pipeline {
                     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']){
                         unstash 'terraform_output'
                         sh "cat output.json"
-                        sh "mkdir aws-security/files || true"
+                        sh "mkdir -p aws-security/files || true"
                         sh "mkdir test-results || true"
-                        sh "cp output.json aws-security/files/output.json"
+                        sh "cp -rf ./output.json aws-security/files/"
                         sh "inspec exec aws-security --reporter=cli junit:test-results/inspec-junit.xml -t aws://eu-west-1"
                         sh "touch test-results/inspec-junit.xml"
                         junit 'test-results/*.xml'
@@ -145,7 +145,7 @@ pipeline {
             }
 
         }
-        stage('destroy sandbo stack'){
+        stage('destroy sandbox stack'){
             agent { docker {image 'simonmcc/hashicorp-pipeline:latest'} }
             when {
                 expression { env.BRANCH_NAME != 'master' }
